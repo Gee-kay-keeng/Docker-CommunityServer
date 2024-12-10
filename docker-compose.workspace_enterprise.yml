@@ -37,6 +37,7 @@ services:
      - MYSQL_SERVER_HOST=onlyoffice-mysql-server
      - MYSQL_SERVER_USER=onlyoffice_user
      - MYSQL_SERVER_PASS=onlyoffice_pass
+     - MAIL_DOMAIN_NAME=${MAIL_SERVER_HOSTNAME}
      - MAIL_SERVER_API_PORT=8081
      - MAIL_SERVER_API_HOST=onlyoffice-mail-server
      - MAIL_SERVER_DB_HOST=onlyoffice-mysql-server
