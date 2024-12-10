@@ -6,6 +6,9 @@ services:
      - MYSQL_ROOT_PASSWORD=my-secret-pw
     networks:
      - onlyoffice
+    expose:
+      - "3306"
+      - "33060"
     stdin_open: true
     tty: true
     restart: always
@@ -49,6 +52,13 @@ services:
      - '80:80'
      - '443:443'
      - '5222:5222'
+    expose:
+      - "3306"
+      - "5280"
+      - "9865-9866"
+      - "9871"
+      - "9882"
+      - "9888"
     stdin_open: true
     tty: true
     restart: always
@@ -122,12 +132,19 @@ services:
       - onlyoffice
     restart: always
     privileged: true
-    ports: ['25:25','143:143','587:587']
     stdin_open: true
     tty: true
+    ports:
+      - "25:25"
+      - "143:143"
+      - "465:465"
+      - "587:587"
+      - "993:993"
+      - "995:995"
+      - "4190:4190"
     expose:
-      - '8081'
       - '3306'
+      - '8081'
     volumes:
       - mail_data:/var/vmail
       - mail_certs:/etc/pki/tls/mailserver
