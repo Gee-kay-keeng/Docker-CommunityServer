@@ -473,7 +473,7 @@ sed 's_\(\"ImapSyncStartDate":\).*,_\1 "'${MAIL_IMAPSYNC_START_DATE}'",_' -i ${A
 sed "/mail\.imap-sync-start-date/s/value=\"\S*\"/value=\"${MAIL_IMAPSYNC_START_DATE}\"/g" -i ${APP_ROOT_DIR}/web.appsettings.config
 
 if [ ${MAIL_SERVER_API_HOST} ]; then
- if [ ! bash ${SYSCONF_TOOLS_DIR}/wait-for-it.sh  ${MAIL_SERVER_API_HOST}:25 --timeout=300 --quiet -s -- echo "MailServer is up" ]; then
+ if ! bash ${SYSCONF_TOOLS_DIR}/wait-for-it.sh  ${MAIL_SERVER_API_HOST}:25 --timeout=300 --quiet -s -- echo "MailServer is up"; then
 	unset MAIL_SERVER_DB_HOST;
 	unset MAIL_SERVER_PORT_3306_TCP_ADDR;
 	MAIL_SERVER_DB_HOST="";
