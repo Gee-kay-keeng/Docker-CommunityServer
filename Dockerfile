@@ -59,7 +59,7 @@ RUN apt-get -y update && \
 	chmod 644 /usr/share/keyrings/xamarin.gpg && \
 	curl -fsSL https://d2nlctn12v279m.cloudfront.net/repo/mono/mono.key | gpg --no-default-keyring --keyring gnupg-ring:/usr/share/keyrings/mono-extra.gpg --import && \
 	chmod 644 /usr/share/keyrings/mono-extra.gpg && \
-    wget http://archive.ubuntu.com/ubuntu/pool/main/g/glibc/multiarch-support_2.27-3ubuntu1_amd64.deb && \
+    wget https://archive.ubuntu.com/ubuntu/pool/main/g/glibc/multiarch-support_2.27-3ubuntu1_amd64.deb && \
     apt-get install ./multiarch-support_2.27-3ubuntu1_amd64.deb && \
     rm -f ./multiarch-support_2.27-3ubuntu1_amd64.deb && \
     wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | apt-key add - && \
