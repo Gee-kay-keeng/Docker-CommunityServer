@@ -124,4 +124,4 @@ VOLUME ["/sys/fs/cgroup","/var/log/${PACKAGE_SYSNAME}", "/var/www/${PACKAGE_SYSN
 
 EXPOSE 80 443 5222 3306 9865 9888 9866 9871 9882 5280
 
-CMD ["/app/run-community-server.sh"];
+CMD ["/bin/bash", "/app/run-community-server.sh"]
