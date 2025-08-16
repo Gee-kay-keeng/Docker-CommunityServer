@@ -29,6 +29,7 @@ services:
      - DOCUMENT_SERVER_JWT_ENABLED=true
      - DOCUMENT_SERVER_JWT_SECRET=jwt_secret
      - DOCUMENT_SERVER_JWT_HEADER=AuthorizationJwt
+     - DOCUMENT_SERVER_URL_PUBLIC=https://office.mwihoko.com/ds-vpath/
      - MYSQL_SERVER_ROOT_PASSWORD=my-secret-pw
      - MYSQL_SERVER_DB_NAME=onlyoffice
      - MYSQL_SERVER_HOST=onlyoffice-mysql-server
@@ -96,6 +97,9 @@ services:
      - JWT_ENABLED=true
      - JWT_SECRET=jwt_secret
      - JWT_HEADER=AuthorizationJwt
+     - X_FORWARDED_PROTO=https
+     - X_FORWARDED_HOST=office.mwihoko.com
+     - dokploy-network
     networks:
       - onlyoffice
     expose:
