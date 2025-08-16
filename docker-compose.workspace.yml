@@ -110,6 +110,13 @@ services:
        - document_log:/var/log/onlyoffice
        - ./document_fonts:/usr/share/fonts/truetype/custom
        - document_forgotten:/var/lib/onlyoffice/documentserver/App_Data/cache/files/forgotten
+    command: >
+        bash -c "
+        sed -i 's/map \$$http_x_forwarded_proto \$$the_scheme {/map \$$http_x_forwarded_proto \$$the_scheme {\n        default https;/' /etc/nginx/sites-available/ds &&
+        sed -i '/default \$$http_x_forwarded_proto;/d' /etc/nginx/sites-available/ds &&
+        sed -i '/\"\" \$$scheme;/d' /etc/nginx/sites-available/ds &&
+        /app/ds/run-document-server.sh
+        "
   onlyoffice-mail-server:
     container_name: onlyoffice-mail-server
     image: onlyoffice/mailserver:1.6.75
