@@ -99,9 +99,9 @@ services:
      - JWT_HEADER=AuthorizationJwt
      - X_FORWARDED_PROTO=https
      - X_FORWARDED_HOST=office.mwihoko.com
-     - dokploy-network
     networks:
       - onlyoffice
+      - dokploy-network
     expose:
       - '80'
       - '443'
