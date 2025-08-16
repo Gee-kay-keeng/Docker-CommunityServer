@@ -29,7 +29,7 @@ services:
      - DOCUMENT_SERVER_JWT_ENABLED=true
      - DOCUMENT_SERVER_JWT_SECRET=jwt_secret
      - DOCUMENT_SERVER_JWT_HEADER=AuthorizationJwt
-     - DOCUMENT_SERVER_URL_PUBLIC=https://office.mwihoko.com/ds-vpath/
+     - DOCUMENT_SERVER_URL_PUBLIC=http://office.mwihoko.com/ds-vpath/
      - MYSQL_SERVER_ROOT_PASSWORD=my-secret-pw
      - MYSQL_SERVER_DB_NAME=onlyoffice
      - MYSQL_SERVER_HOST=onlyoffice-mysql-server
@@ -116,18 +116,7 @@ services:
        - document_log:/var/log/onlyoffice
        - ./document_fonts:/usr/share/fonts/truetype/custom
        - document_forgotten:/var/lib/onlyoffice/documentserver/App_Data/cache/files/forgotten
-    labels:
-       - "traefik.enable=true"
-       - "traefik.http.middlewares.onlyoffice-redirect.redirectscheme.scheme=https"
-       - "traefik.http.middlewares.onlyoffice-redirect.redirectscheme.permanent=true"
-       - "traefik.http.routers.onlyoffice-http.entrypoints=web"
-       - "traefik.http.routers.onlyoffice-http.rule=Host(`office.mwihoko.com`)"
-       - "traefik.http.routers.onlyoffice-http.middlewares=onlyoffice-redirect"
-       - "traefik.http.routers.onlyoffice-https.entrypoints=websecure"
-       - "traefik.http.routers.onlyoffice-https.rule=Host(`office.mwihoko.com`)"
-       - "traefik.http.routers.onlyoffice-https.tls.certresolver=letsencrypt"
-       - "traefik.http.services.onlyoffice.loadbalancer.server.port=80"
-       - "traefik.docker.network=dokploy-network"
+    
   onlyoffice-mail-server:
     container_name: onlyoffice-mail-server
     image: onlyoffice/mailserver:1.6.75
