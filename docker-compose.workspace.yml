@@ -100,6 +100,12 @@ services:
      - X_FORWARDED_PROTO=https
      - X_FORWARDED_HOST=office.mwihoko.com
      - X_FORWARDED_HOST=office.mwihoko.com
+     - JSON_URL=https://office.mwihoko.com
+     - WOPI_URL=https://office.mwihoko.com
+     - DS_URL=https://office.mwihoko.com
+     - USE_UNAUTHORIZED_STORAGE=true
+     - ALLOW_META_IP_ADDRESS=true
+     - ALLOW_PRIVATE_IP_ADDRESS=true
     networks:
       - onlyoffice
       - dokploy-network
