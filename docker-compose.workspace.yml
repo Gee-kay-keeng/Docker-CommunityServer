@@ -111,13 +111,6 @@ services:
        - document_log:/var/log/onlyoffice
        - ./document_fonts:/usr/share/fonts/truetype/custom
        - document_forgotten:/var/lib/onlyoffice/documentserver/App_Data/cache/files/forgotten
-    command: >                                                                    # ← ADD THIS
-       bash -c "                                                                   # ← ADD THIS
-       cp /etc/onlyoffice/documentserver/nginx/includes/ds-docservice.conf /etc/onlyoffice/documentserver/nginx/includes/ds-docservice.conf.backup &&
-       sed -i 's/map \$$http_cloudfront_forwarded_proto:\$$http_x_forwarded_proto \$$the_scheme {/map \$$http_cloudfront_forwarded_proto:\$$http_x_forwarded_proto \$$the_scheme {\n     default https;/' /etc/onlyoffice/documentserver/nginx/includes/ds-docservice.conf &&
-       sed -i '/default \$$scheme;/d' /etc/onlyoffice/documentserver/nginx/includes/ds-docservice.conf &&
-       /app/ds/run-document-server.sh                                              # ← ADD THIS
-       "
     
   onlyoffice-mail-server:
     container_name: onlyoffice-mail-server
