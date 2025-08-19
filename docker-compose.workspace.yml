@@ -102,7 +102,7 @@ services:
 
   onlyoffice-document-server:
     container_name: onlyoffice-document-server
-    image: onlyoffice/documentserver:8.1
+    image: onlyoffice/documentserver:8.2
     stdin_open: true
     tty: true
     restart: always
