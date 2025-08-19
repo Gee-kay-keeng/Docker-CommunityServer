@@ -29,7 +29,7 @@ services:
      - DOCUMENT_SERVER_JWT_ENABLED=true
      - DOCUMENT_SERVER_JWT_SECRET=jwt_secret
      - DOCUMENT_SERVER_JWT_HEADER=AuthorizationJwt
-     - DOCUMENT_SERVER_URL_PUBLIC=https://office.mwihoko.com/ds-vpath/
+     - DOCUMENT_SERVER_URL_PUBLIC=https://office.mwihoko.com
      - MYSQL_SERVER_ROOT_PASSWORD=my-secret-pw
      - MYSQL_SERVER_DB_NAME=onlyoffice
      - MYSQL_SERVER_HOST=onlyoffice-mysql-server
