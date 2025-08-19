@@ -29,7 +29,7 @@ services:
      - DOCUMENT_SERVER_JWT_ENABLED=true
      - DOCUMENT_SERVER_JWT_SECRET=jwt_secret
      - DOCUMENT_SERVER_JWT_HEADER=AuthorizationJwt
-     - DOCUMENT_SERVER_URL_PUBLIC=https://office.mwihoko.com
+     - DOCUMENT_SERVER_URL_PUBLIC=https://office.mwihoko.com/ds-vpath/
      - MYSQL_SERVER_ROOT_PASSWORD=my-secret-pw
      - MYSQL_SERVER_DB_NAME=onlyoffice
      - MYSQL_SERVER_HOST=onlyoffice-mysql-server
@@ -120,17 +120,6 @@ services:
        - document_log:/var/log/onlyoffice
        - ./document_fonts:/usr/share/fonts/truetype/custom
        - document_forgotten:/var/lib/onlyoffice/documentserver/App_Data/cache/files/forgotten
-    # networks:
-    #    - onlyoffice
-    #    - dokploy-network   # <-- 1. attach to Traefik network
-    labels:
-       - traefik.enable=true
-       - traefik.http.routers.onlyoffice-docs.rule=Host(`office.mwihoko.com`) && PathPrefix(`/ds-vpath/`)
-       - traefik.http.routers.onlyoffice-docs.entrypoints=websecure
-       - traefik.http.routers.onlyoffice-docs.tls.certresolver=letsencrypt
-       - traefik.http.services.onlyoffice-docs.loadbalancer.server.port=80   # <-- 2. correct port
-       - traefik.http.routers.onlyoffice-docs.middlewares=oo-header
-       - traefik.http.middlewares.oo-header.headers.customRequestHeaders.X-Forwarded-Proto=https
     
   onlyoffice-mail-server:
     container_name: onlyoffice-mail-server
