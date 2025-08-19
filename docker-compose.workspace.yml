@@ -15,12 +15,12 @@ services:
      - mysql_data:/var/lib/mysql
 
   onlyoffice-document-server:
-    container_name: onlyoffice-document-server
-    image: onlyoffice/documentserver:8.1
-    stdin_open: true
-    tty: true
-    restart: always
-    environment:
+  container_name: onlyoffice-document-server
+  image: onlyoffice/documentserver:8.1
+  stdin_open: true
+  tty: true
+  restart: always
+  environment:
      - JWT_ENABLED=true
      - JWT_SECRET=jwt_secret
      - JWT_HEADER=AuthorizationJwt
@@ -28,75 +28,54 @@ services:
      - X_FORWARDED_HOST=office.mwihoko.com
      - JSON_URL=https://office.mwihoko.com
      - WOPI_URL=https://office.mwihoko.com
-     - DS_URL=https://office.mwihoko.com
+     - DS_URL=https://office.mwihoko.com/ds-vpath/  # Added path
      - USE_UNAUTHORIZED_STORAGE=true
      - ALLOW_META_IP_ADDRESS=true
      - ALLOW_PRIVATE_IP_ADDRESS=true
-    networks:
-      - onlyoffice
-      - dokploy-network
-    expose:
-      - '80'
-    volumes:
-       - document_data:/var/www/onlyoffice/Data
-       - document_log:/var/log/onlyoffice
-       - ./document_fonts:/usr/share/fonts/truetype/custom
-       - document_forgotten:/var/lib/onlyoffice/documentserver/App_Data/cache/files/forgotten
-    # 🔥 ADD THESE TRAEFIK LABELS
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.onlyoffice.rule=Host(`office.mwihoko.com`)"
-      - "traefik.http.routers.onlyoffice.tls=true"
-      - "traefik.http.routers.onlyoffice.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.onlyoffice.entrypoints=websecure"
-      - "traefik.http.services.onlyoffice.loadbalancer.server.port=80"
-      
-      # 🔧 CRITICAL: Proxy headers middleware
-      - "traefik.http.middlewares.onlyoffice-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
-      - "traefik.http.middlewares.onlyoffice-headers.headers.customrequestheaders.X-Forwarded-Host=office.mwihoko.com"
-      - "traefik.http.middlewares.onlyoffice-headers.headers.customrequestheaders.X-Real-IP="
-      - "traefik.http.middlewares.onlyoffice-headers.headers.customrequestheaders.X-Forwarded-For="
-      
-      # 🛡️ Security headers
-      - "traefik.http.middlewares.onlyoffice-security.headers.forcestsheader=true"
-      - "traefik.http.middlewares.onlyoffice-security.headers.stsincludesubdomains=true"
-      - "traefik.http.middlewares.onlyoffice-security.headers.stsseconds=31536000"
-      - "traefik.http.middlewares.onlyoffice-security.headers.contenttypenosniff=true"
-      - "traefik.http.middlewares.onlyoffice-security.headers.customresponseheaders.Content-Security-Policy=upgrade-insecure-requests"
-      
-      # 🔗 Apply middlewares to router
-      - "traefik.http.routers.onlyoffice.middlewares=onlyoffice-headers,onlyoffice-security"
-      
-      # 🌐 Network specification
-      - "traefik.docker.network=dokploy-network"
-    # Apply nginx fixes on startup
-    command: >
-      bash -c "
-      sleep 10 &&
-      
-      # Fix all scheme references to force HTTPS
-      find /etc/onlyoffice/documentserver/nginx/ -name '*.conf' -exec sed -i 's/default \$$scheme;/default https;/g' {} \; &&
-      find /etc/nginx/ -name '*.conf' -exec sed -i 's/default \$$scheme;/default https;/g' {} \; &&
-      
-      # Create force-https config
-      cat > /etc/nginx/conf.d/force-https.conf << 'EOF'
-      # Force HTTPS scheme for all requests
-      map \$$http_x_forwarded_proto \$$the_scheme {
-          default https;
-          https https;
-          http https;
-      }
-      
-      # Additional security headers
-      add_header Content-Security-Policy 'upgrade-insecure-requests' always;
-      add_header Strict-Transport-Security 'max-age=31536000; includeSubDomains' always;
-      EOF
-      
-      # Reload nginx and start services
-      nginx -s reload 2>/dev/null || true &&
-      /app/ds/run-document-server.sh
-      "
-
+     - SSL_OFFLOAD=true  # Critical for HTTPS offloading
+  networks:
+     - onlyoffice
+     - dokploy-network
+  expose:
+     - '80'
+  volumes:
+     - document_data:/var/www/onlyoffice/Data
+     - document_log:/var/log/onlyoffice
+     - ./document_fonts:/usr/share/fonts/truetype/custom
+     - document_forgotten:/var/lib/onlyoffice/documentserver/App_Data/cache/files/forgotten
+  labels:
+     - traefik.enable=true
+     - traefik.http.routers.onlyoffice.rule=Host(`office.mwihoko.com`)
+     - traefik.http.routers.onlyoffice.tls=true
+     - traefik.http.routers.onlyoffice.tls.certresolver=letsencrypt
+     - traefik.http.routers.onlyoffice.entrypoints=websecure
+     - traefik.http.services.onlyoffice.loadbalancer.server.port=80
+     - traefik.http.middlewares.onlyoffice-headers.headers.customrequestheaders.X-Forwarded-Proto=https
+     - traefik.http.middlewares.onlyoffice-headers.headers.customrequestheaders.X-Forwarded-Host=office.mwihoko.com
+     - traefik.docker.network=dokploy-network
+  command: |
+     bash -c " sleep 10 &&
+     # Force HTTPS in Nginx configs
+     find /etc/onlyoffice/documentserver/nginx/ -name '*.conf' -exec sed -i 's/default \$$scheme;/default https;/g' {} \; 
+     find /etc/nginx/ -name '*.conf' -exec sed -i 's/default \$$scheme;/default https;/g' {} \; 
+    
+     # Create force-https config
+     cat > /etc/nginx/conf.d/force-https.conf << 'EOF'
+     # Force HTTPS scheme for all requests
+     map \$$http_x_forwarded_proto \$$the_scheme {
+         default https;
+         https https;
+         http https;
+     }
+    
+     # Additional security headers
+     add_header Content-Security-Policy 'upgrade-insecure-requests' always;
+     add_header Strict-Transport-Security 'max-age=31536000; includeSubDomains' always;
+     EOF
+    
+     # Start services
+     nginx -s reload 2>/dev/null || true && /app/ds/run-document-server.sh "
+     
   onlyoffice-community-server:
     container_name: onlyoffice-community-server
     image: onlyoffice/communityserver:12.6.0.1900
