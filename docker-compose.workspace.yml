@@ -121,7 +121,7 @@ services:
        - ./document_fonts:/usr/share/fonts/truetype/custom
        - document_forgotten:/var/lib/onlyoffice/documentserver/App_Data/cache/files/forgotten
 
-     labels:
+    labels:
        - traefik.http.middlewares.oo-header.headers.customRequestHeaders.X-Forwarded-Proto=https
        - traefik.http.routers.onlyoffice-docs.middlewares=oo-header
     
