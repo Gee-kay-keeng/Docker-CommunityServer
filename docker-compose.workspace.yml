@@ -99,9 +99,15 @@ services:
      - JWT_HEADER=AuthorizationJwt
      - X_FORWARDED_PROTO=https
      - X_FORWARDED_HOST=office.mwihoko.com
-     - dokploy-network
+     - X_FORWARDED_HOST=office.mwihoko.com
+     - JSON_URL=https://office.mwihoko.com
+     - WOPI_URL=https://office.mwihoko.com
+     - USE_UNAUTHORIZED_STORAGE=true
+     - ALLOW_META_IP_ADDRESS=true
+     - ALLOW_PRIVATE_IP_ADDRESS=true
     networks:
       - onlyoffice
+      - dokploy-network
     expose:
       - '80'
       - '443'
@@ -110,6 +116,7 @@ services:
        - document_log:/var/log/onlyoffice
        - ./document_fonts:/usr/share/fonts/truetype/custom
        - document_forgotten:/var/lib/onlyoffice/documentserver/App_Data/cache/files/forgotten
+    
   onlyoffice-mail-server:
     container_name: onlyoffice-mail-server
     image: onlyoffice/mailserver:1.6.75
