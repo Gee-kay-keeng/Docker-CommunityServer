@@ -120,9 +120,9 @@ services:
        - document_log:/var/log/onlyoffice
        - ./document_fonts:/usr/share/fonts/truetype/custom
        - document_forgotten:/var/lib/onlyoffice/documentserver/App_Data/cache/files/forgotten
-    networks:
-       - onlyoffice
-       - dokploy-network   # <-- 1. attach to Traefik network
+    # networks:
+    #    - onlyoffice
+    #    - dokploy-network   # <-- 1. attach to Traefik network
     labels:
        - traefik.enable=true
        - traefik.http.routers.onlyoffice-docs.rule=Host(`office.mwihoko.com`) && PathPrefix(`/ds-vpath/`)
